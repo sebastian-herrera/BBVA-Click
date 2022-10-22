@@ -1,0 +1,23 @@
+[
+  {
+    "ATM": 1131,
+    "Sitio": "COMERCIAL MEXICANA TACUBA",
+    "CR": 6062,
+    "Division": "METROPOLITANA NORTE",
+    "Marca": "WINCOR",
+    "Tipo dispositivo": "DISPENSADOR",
+    "Estatus dispositivo": "ACTIVO",
+    "Calle": "CALZ MEXICO TACUBA",
+    "Num. Ext.": 911,
+    "Estado": "DISTRITO FEDERAL",
+    "Ciudad": "CIUDAD DE MEXICO",
+    "CP": 11870,
+    "Del/Muni": "MIGUEL HIDALGO",
+    "Colonia": "TACUBAYA",
+    "Latitud": 19.46016035,
+    "Longitud": -99.19324401,
+    "Tipo localidad": "REM",
+    "IDC": "WINCOR",
+    "ETV": "SEPSA"
+  }
+]
