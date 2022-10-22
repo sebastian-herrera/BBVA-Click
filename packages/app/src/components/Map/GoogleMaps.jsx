@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
-import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { Button } from '@nextui-org/react';
 
 import DATA from '@/data/atm.json';
 import MyMapComponent from './MyMapComponent';
 
-const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
-
-const renderMap = (status) => {
-  if (status === Status.LOADING) return <h3>{status} ..</h3>;
-  if (status === Status.FAILURE) return <h3>{status} ...</h3>;
-  return null;
-};
-
 function GoogleMaps() {
-  const center = { lat: 25, lng: -100 };
-  const zoom = 6;
+  // const center = { lat: 25, lng: -100 };
+  // const zoom = 6;
+  const center = { lat: 19.46, lng: -99.194 };
+  const zoom = 19;
 
   const [data, setData] = useState(DATA);
+  const [number, setNumber] = useState(1131);
 
   const onNewDataArrive = () => {
     const updateATM = data.map((atm) => {
-      if (atm.ATM === 1131) {
+      if (atm.ATM === number) {
         return {
           ...atm,
           'Estatus dispositivo': 'INACTIVO',
         };
       }
+      setNumber(number + 1);
+      if (number > 100);
       return atm;
     });
 
@@ -35,9 +31,7 @@ function GoogleMaps() {
 
   return (
     <>
-      <Wrapper apiKey={VITE_GOOGLE_MAPS_API_KEY} render={renderMap}>
-        <MyMapComponent center={center} zoom={zoom} DATA={data} />
-      </Wrapper>
+      <MyMapComponent center={center} zoom={zoom} DATA={data} />
 
       <Button
         auto
