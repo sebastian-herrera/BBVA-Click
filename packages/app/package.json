@@ -22,6 +22,7 @@
     "react": "^18.2.0",
     "react-compound-slider": "^3.4.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.38.0",
     "vite": "^3.0.7"
   },
   "devDependencies": {

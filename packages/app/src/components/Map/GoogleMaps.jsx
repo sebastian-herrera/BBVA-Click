@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Container } from '@nextui-org/react';
+import { Container, Button, Dropdown } from '@nextui-org/react';
+import { useForm, Controller } from 'react-hook-form';
 
 import DATA from '@/data/atm.json';
 import ISSUES_DATA from '@/data/issues-raw.json';
+import divisiones from './diviones.json';
+import ciudades from './ciudades.json';
 
 import MyMapComponent from './MyMapComponent';
 import { TimeSlider } from '../index';
@@ -19,6 +22,14 @@ const ISSUES_DATA_CLEAN = ISSUES_DATA.map((issue) => {
 });
 
 function GoogleMaps() {
+  const { control, handleSubmit } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      Division: '',
+      Ciudad: '',
+    },
+  });
+
   const center = { lat: 25, lng: -100 };
   const zoom = 6;
   // const center = { lat: 19.46016035, lng: -99.19324401 };
@@ -27,6 +38,27 @@ function GoogleMaps() {
   const [data, setData] = useState(DATA);
   // const [issues, setIssues] = useState(ISSUES_DATA_CLEAN);
   const [time, setTime] = useState(0);
+  const [filters, setFilters] = useState({});
+
+  useEffect(() => {
+    console.log(filters);
+    if (Object.values(filters).length) {
+      if (typeof filters.Division) {
+        const asd =
+          filters.Division !== ''
+            ? Object.values(DATA).filter((d) => d.Division === filters.Division)
+            : DATA;
+        setData(asd);
+      }
+      if (filters.Ciudad) {
+        const asd =
+          filters.Ciudad !== ''
+            ? Object.values(DATA).filter((d) => d.Ciudad === filters.Ciudad)
+            : DATA;
+        setData(asd);
+      }
+    }
+  }, [filters]);
 
   useEffect(() => {
     // if (time > issues[0].FECHA_INICIO) {
@@ -72,6 +104,10 @@ function GoogleMaps() {
     setTime(d);
   };
 
+  const submitFilter = async (e) => {
+    setFilters(e);
+  };
+
   return (
     <>
       <Container
@@ -88,12 +124,91 @@ function GoogleMaps() {
         <TimeSlider time={(d) => getTime(d)} />
       </Container>
 
+      <Container
+        css={{
+          width: 'auto',
+          position: 'absolute',
+          bottom: '$36',
+          left: '$4',
+          backgroundColor: '$white',
+          zIndex: 1,
+          padding: '$12 0',
+        }}
+      >
+        <Controller
+          name="Division"
+          control={control}
+          render={({ field }) => {
+            const [selectedDropdown, setSelectedDropdown] = useState(new Set([]));
+            const { onChange } = field;
+
+            return (
+              <Dropdown>
+                <Dropdown.Button flat css={{ tt: 'capitalize' }}>
+                  {Array.from(selectedDropdown)[0] || 'Division'}
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  color="primary"
+                  selectionMode="single"
+                  selectedKeys={selectedDropdown}
+                  onSelectionChange={(e) => {
+                    setSelectedDropdown(e);
+                    onChange(Array.from(e).join(', ').replaceAll('_', ' '));
+                  }}
+                >
+                  <Dropdown.Section title="Division">
+                    {Object.values(divisiones).map(({ division }) => (
+                      <Dropdown.Item key={division}>{division}</Dropdown.Item>
+                    ))}
+                  </Dropdown.Section>
+                </Dropdown.Menu>
+              </Dropdown>
+            );
+          }}
+        />
+        <Controller
+          name="Ciudad"
+          control={control}
+          render={({ field }) => {
+            const [selectedDropdown, setSelectedDropdown] = useState(new Set([]));
+            const { onChange } = field;
+
+            return (
+              <Dropdown>
+                <Dropdown.Button flat css={{ tt: 'capitalize' }}>
+                  {Array.from(selectedDropdown)[0] || 'Ciudad'}
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  color="primary"
+                  selectionMode="single"
+                  selectedKeys={selectedDropdown}
+                  onSelectionChange={(e) => {
+                    setSelectedDropdown(e);
+                    onChange(Array.from(e).join(', ').replaceAll('_', ' '));
+                  }}
+                >
+                  <Dropdown.Section title="Ciudad">
+                    {Object.values(ciudades).map(({ name }) => (
+                      <Dropdown.Item key={name}>{name}</Dropdown.Item>
+                    ))}
+                  </Dropdown.Section>
+                </Dropdown.Menu>
+              </Dropdown>
+            );
+          }}
+        />
+        <Button type="submit" onPress={handleSubmit(submitFilter)}>
+          Filtrar
+        </Button>
+      </Container>
+
       <MyMapComponent
         center={center}
         zoom={zoom}
         DATA={data}
         ISSUES={ISSUES_DATA_CLEAN}
         TIME={time}
+        FILTERS={filters}
       />
 
       {/* <Button

@@ -27,6 +27,8 @@ function MyMapComponent({ center, zoom, DATA, ISSUES, TIME }) {
       layers: [
         new ScatterplotLayer({
           id: 'atms',
+          // data: DATA,
+          // data: Object.values(DATA).filter((d) => d.Division === 'NOROESTE'),
           data: DATA,
           pickable: true,
           autoHighlight: true,
@@ -42,7 +44,10 @@ function MyMapComponent({ center, zoom, DATA, ISSUES, TIME }) {
             d['Estatus dispositivo'] === 'FALLA' && index * 0.02,
           ],
           // getFillColor: (d) => COLORS[d['Estatus dispositivo']],
-          getFillColor: (d) =>
+          getFillColor: (d) => {
+            if (d['Estatus dispositivo'] === 'FALLA') {
+              return COLORS.FALLA;
+            }
             // console.log(TIME);
             // console.log(TIME > ISSUES[0].FECHA_INICIO);
             // console.log(TIME);
@@ -61,7 +66,8 @@ function MyMapComponent({ center, zoom, DATA, ISSUES, TIME }) {
             //   }
             // });
             // if (d['Estatus dispositivo'] === 'FALLA') console.log(d);
-            COLORS[d['Estatus dispositivo']],
+            return COLORS[d['Estatus dispositivo']];
+          },
           onClick: (info) => console.log(info.object),
         }),
       ],
