@@ -64,7 +64,7 @@ function ShowInfo() {
         Sucursales: {data.sucursales}
       </Text>
 
-      <Button onClick={showInfo} auto color="secondary" css={{ position: 'fixed', bottom: 0 }}>
+      <Button onClick={showInfo} auto color="inherit" css={{ position: 'fixed', bottom: 5 }}>
         {card.title}
       </Button>
     </Card>
